@@ -26,7 +26,7 @@ export default function PrivacyPage() {
         </h2>
 
         <p>
-          Email: yajbrothersebay@gmail.com
+          Email: ajbrothersebay@gmail.com
         </p>
       </div>
     </main>
