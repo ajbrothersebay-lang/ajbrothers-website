@@ -1,221 +1,304 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import Navbar from "@/components/layout/Navbar";
+import ProductCard from "@/components/ProductCard";
+
+
+const categories = [
+  {
+    name: "Video Games",
+    icon: "🎮",
+    link: "/category/video-games",
+    description: "PlayStation, Xbox, Nintendo games"
+  },
+  {
+    name: "Video Game Consoles",
+    icon: "🕹️",
+    link: "/category/consoles",
+    description: "Consoles, controllers and bundles"
+  },
+  {
+    name: "Jewellery & Watches",
+    icon: "⌚",
+    link: "/category/watches",
+    description: "Watches and jewellery"
+  },
+  {
+    name: "Cameras & Photography",
+    icon: "📷",
+    link: "/category/cameras",
+    description: "Cameras, lenses and accessories"
+  },
+  {
+    name: "Toys & Games",
+    icon: "🧸",
+    link: "/category/toys",
+    description: "Toys and collectables"
+  },
+  {
+    name: "Home, Furniture & DIY",
+    icon: "🏠",
+    link: "/category/home",
+    description: "Home products and DIY items"
+  }
+];
+
+
 
 export default function Home() {
 
+
   const [products, setProducts] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
+
+
 
   useEffect(() => {
+
+
     fetch("/api/products")
+
       .then((res) => res.json())
+
       .then((data) => {
-        setProducts(data.inventoryItems || []);
+
+        setProducts(
+          data.inventoryItems || []
+        );
+
       })
+
       .catch((error) => {
+
         console.error(error);
+
       });
+
+
   }, []);
 
 
+
+
+
+
+  const filteredProducts = products.filter((product) => {
+
+
+    const title =
+      product.product?.title?.toLowerCase() || "";
+
+
+
+    return title.includes(
+      search.toLowerCase()
+    );
+
+
+  });
+
+
+
+
+
+
+
   return (
-    <main className="min-h-screen bg-black text-white">
 
-      <header className="bg-zinc-950 border-b border-lime-400">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+    <>
 
-          <div className="flex items-center gap-4">
-            <Image
-              src="/logo.png"
-              alt="AJ Brothers"
-              width={60}
-              height={60}
-            />
-
-            <h1 className="text-3xl font-bold text-lime-400">
-              AJ Brothers
-            </h1>
-          </div>
-
-          <nav className="flex gap-6 text-lime-400 font-semibold">
-            <a href="#">Home</a>
-            <a href="#">Shop</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-          </nav>
-
-        </div>
-      </header>
+      <Navbar />
 
 
-      <section className="mx-auto max-w-6xl px-6 py-16 text-center">
-
-        <h2 className="text-5xl font-bold text-lime-400">
-          Welcome to AJ Brothers
-        </h2>
-
-        <p className="mt-6 text-gray-300">
-          Games • Electronics • Watches • Collectables
-        </p>
+      <main className="min-h-screen bg-black text-white">
 
 
-        <div className="mt-8">
+        {/* HERO */}
+
+        <section className="px-6 py-20 text-center">
+
+
+          <h1 className="text-6xl font-bold text-yellow-400">
+            AJ Brothers
+          </h1>
+
+
+          <p className="mt-6 text-xl text-gray-300">
+            Games • Electronics • Watches • Collectables
+          </p>
+
+
+
           <a
             href="https://www.ebay.co.uk/str/ajbrothers1"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg bg-lime-400 px-8 py-4 text-xl font-bold text-black hover:bg-lime-300 transition"
+            className="mt-8 inline-block rounded-lg bg-yellow-400 px-8 py-4 font-bold text-black"
           >
-            Shop on eBay
+            Visit eBay Store
           </a>
-        </div>
 
 
-        <div className="mt-16 grid grid-cols-3 gap-6 text-center">
-
-          <div>
-            <h3 className="text-4xl font-bold text-lime-400">
-              1000+
-            </h3>
-            <p className="text-gray-400">
-              Products Sold
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-4xl font-bold text-lime-400">
-              ★★★★★
-            </h3>
-            <p className="text-gray-400">
-              Trusted Seller
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-4xl font-bold text-lime-400">
-              UK
-            </h3>
-            <p className="text-gray-400">
-              Fast Dispatch
-            </p>
-          </div>
-
-        </div>
+        </section>
 
 
-        <div className="mt-10">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="w-full max-w-xl rounded-lg border border-lime-400 bg-zinc-900 p-4 text-white"
-          />
-        </div>
 
 
-        {/* LIVE EBAY PRODUCTS */}
 
-        <div className="mt-16 rounded-xl border border-lime-400 bg-zinc-900 p-10">
-
-          <h3 className="mb-8 text-3xl font-bold text-lime-400">
-            Latest Products
-          </h3>
-
-
-          {products.length === 0 && (
-            <p className="text-gray-400">
-              Loading eBay products...
-            </p>
-          )}
-
-
-          <div className="grid md:grid-cols-3 gap-6">
-
-            {products.map((product) => (
-
-              <div
-                key={product.sku}
-                className="rounded-xl bg-black p-5 border border-zinc-700"
-              >
-
-                <img
-                  src={
-                    product.product?.imageUrls?.[0] ||
-                    "/logo.png"
-                  }
-                  alt={product.product?.title}
-                  className="h-48 w-full object-contain"
-                />
-
-
-                <h4 className="mt-4 text-lg font-bold text-lime-400">
-                  {product.product?.title}
-                </h4>
-
-
-                <p className="text-gray-300">
-                  Condition: {product.condition}
-                </p>
-
-
-                <a
-                  href={product.offerId}
-                  target="_blank"
-                  className="mt-4 inline-block rounded bg-lime-400 px-4 py-2 text-black font-bold"
-                >
-                  Buy on eBay
-                </a>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </div>
 
 
         {/* CATEGORIES */}
 
-        <div className="mt-16">
 
-          <h2 className="mb-8 text-3xl font-bold text-lime-400">
-            Shop by Category
+        <section className="mx-auto max-w-7xl px-6 py-10">
+
+
+          <h2 className="mb-10 text-4xl font-bold text-yellow-400">
+            Shop Categories
           </h2>
 
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
 
-            {[
-              ["🎮","Games"],
-              ["💻","Electronics"],
-              ["⌚","Watches"],
-              ["📦","Collectables"]
-            ].map(([icon,name]) => (
 
-              <div
-                key={name}
-                className="rounded-xl border border-lime-400 bg-zinc-900 p-6 hover:bg-zinc-800"
+          <div className="grid gap-6 md:grid-cols-3">
+
+
+            {categories.map((category) => (
+
+
+              <a
+
+                key={category.name}
+
+                href={category.link}
+
+                className="rounded-xl border border-zinc-800 bg-zinc-900 p-8 transition hover:scale-105"
+
               >
+
+
                 <div className="text-5xl">
-                  {icon}
+                  {category.icon}
                 </div>
 
-                <h3 className="mt-4 text-xl font-bold text-lime-400">
-                  {name}
+
+                <h3 className="mt-5 text-2xl font-bold text-yellow-400">
+                  {category.name}
                 </h3>
 
-              </div>
+
+                <p className="mt-3 text-gray-400">
+                  {category.description}
+                </p>
+
+
+              </a>
+
 
             ))}
 
+
           </div>
 
-        </div>
+
+        </section>
 
 
-      </section>
 
-    </main>
+
+
+
+
+
+        {/* PRODUCTS */}
+
+
+
+        <section className="mx-auto max-w-7xl px-6 py-16">
+
+
+          <h2 className="mb-8 text-4xl font-bold text-yellow-400">
+            Latest Products
+          </h2>
+
+
+
+
+          <input
+
+            type="text"
+
+            placeholder="Search products..."
+
+            value={search}
+
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+
+            className="mb-10 w-full rounded-lg border border-yellow-400 bg-zinc-900 p-4 text-white"
+
+          />
+
+
+
+
+
+          {filteredProducts.length === 0 && (
+
+            <p className="text-gray-400">
+              Loading products or no products found...
+            </p>
+
+          )}
+
+
+
+
+
+
+          <div className="grid gap-6 md:grid-cols-3">
+
+
+            {filteredProducts.map((product) => (
+
+
+              <ProductCard
+
+                key={product.sku}
+
+                product={product}
+
+              />
+
+
+            ))}
+
+
+          </div>
+
+
+        </section>
+
+
+
+
+
+
+        <footer className="border-t border-zinc-800 py-10 text-center text-gray-400">
+
+          © {new Date().getFullYear()} AJ Brothers
+
+        </footer>
+
+
+
+      </main>
+
+
+    </>
+
   );
+
 }
