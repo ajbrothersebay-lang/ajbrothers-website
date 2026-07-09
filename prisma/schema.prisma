@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  sku            String   @unique
+  name           String
+  category       String?
+  brand          String?
+  condition      String?
+  description    String?
+
+  purchasePrice  Float?
+  sellPrice      Float
+
+  stock          Int      @default(1)
+
+  imageUrl       String?
+
+  ebayItemId     String?
+  ebayListingUrl String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

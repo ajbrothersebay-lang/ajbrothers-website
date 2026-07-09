@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+  console.log("Full URL:", request.url);
+  console.log("Search:", request.nextUrl.search);
+
   return NextResponse.json({
     url: request.url,
-    params: Object.fromEntries(request.nextUrl.searchParams.entries()),
+    search: request.nextUrl.search,
   });
 }
